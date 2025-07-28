@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <title>Simulator Investiție Căsuță</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #e4fce4;
+      padding: 20px;
+      max-width: 700px;
+      margin: auto;
+    }
+    h2 {
+      color: #2e7031;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 6px;
+      margin-top: 4px;
+    }
+    .result {
+      background: #ffffff;
+      padding: 15px;
+      border: 1px solid #ccc;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Simulator Investiție Căsuță</h2>
+
+  <label>Cost achiziție (euro):</label>
+  <input type="number" id="cost" value="35000" />
+
+  <label>Tarif închiriere/zi (lei):</label>
+  <input type="number" id="tarif" value="450" />
+
+  <label>Zile ocupate/lună:</label>
+  <input type="number" id="zile" value="15" />
+
+  <label>Rată bancară/lună (lei):</label>
+  <input type="number" id="rata" value="790" />
+
+  <label>Cheltuieli de administrare (%):</label>
+  <input type="number" id="cheltuieli" value="40" />
+
+  <label>Curs euro/leu:</label>
+  <input type="number" id="curs" value="5" step="0.01" />
+
+  <div class="result" id="rezultate">
+    <p><strong>Încăsări lunare (lei):</strong> <span id="incasariLei"></span></p>
+    <p><strong>Încăsări lunare (euro):</strong> <span id="incasariEuro"></span></p>
+    <p><strong>Încăsări anuale (euro):</strong> <span id="incasariAnuale"></span></p>
+    <p><strong>Încăsări lunare nete (lei):</strong> <span id="incasariNeteLunare"></span></p>
+    <p><strong>Încăsări anuale nete (euro):</strong> <span id="incasariNeteAnualeEuro"></span></p>
+    <br>
+    <p style="color:blue;"><strong>Rentabilitate anuală (%):</strong> <span id="rentabilitate"></span></p>
+    <p style="color:blue;"><strong>Perioada de amortizare (ani):</strong> <span id="amortizare"></span></p>
+  </div>
+
+  <script>
+    function calculeaza() {
+      const cost = parseFloat(document.getElementById("cost").value);
+      const tarif = parseFloat(document.getElementById("tarif").value);
+      const zile = parseFloat(document.getElementById("zile").value);
+      const rata = parseFloat(document.getElementById("rata").value);
+      const cheltuieli = parseFloat(document.getElementById("cheltuieli").value) / 100;
+      const curs = parseFloat(document.getElementById("curs").value);
+
+      const incasariLei = tarif * zile;
+      const incasariEuro = incasariLei / curs;
+      const incasariAnuale = incasariEuro * 12;
+
+      const cheltuieliAdm = incasariLei * cheltuieli;
+      const profitLunar = incasariLei - cheltuieliAdm - rata;
+      const profitLunarEuro = profitLunar / curs;
+      const profitAnualEuro = profitLunarEuro * 12;
+
+      const rentabilitate = (profitAnualEuro / cost) * 100;
+      const amortizare = cost / profitAnualEuro;
+
+      document.getElementById("incasariLei").textContent = incasariLei.toFixed(2) + " lei";
+      document.getElementById("incasariEuro").textContent = incasariEuro.toFixed(2) + " euro";
+      document.getElementById("incasariAnuale").textContent = incasariAnuale.toFixed(2) + " euro";
+      document.getElementById("incasariNeteLunare").textContent = profitLunar.toFixed(2) + " lei";
+      document.getElementById("incasariNeteAnualeEuro").textContent = profitAnualEuro.toFixed(2) + " euro";
+      document.getElementById("rentabilitate").textContent = rentabilitate.toFixed(2) + " %";
+      document.getElementById("amortizare").textContent = amortizare.toFixed(2) + " ani";
+    }
+
+    document.querySelectorAll("input").forEach(input => {
+      input.addEventListener("input", calculeaza);
+    });
+
+    window.onload = calculeaza;
+  </script>
+</body>
+</html>
